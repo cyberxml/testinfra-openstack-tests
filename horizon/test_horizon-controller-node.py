@@ -18,7 +18,7 @@ def test_packages(Package, name):
     ("memcached","11211"),
 ])
 def test_listening_interfaces(Socket, name, port):
-    socket = Socket("tcp://0.0.0.0:" + port)
+    socket = Socket("tcp://" + port)
     assert socket.is_listening
 
 @pytest.mark.parametrize("process,enabled", [

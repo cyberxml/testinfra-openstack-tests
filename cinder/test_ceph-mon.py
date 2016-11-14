@@ -13,7 +13,7 @@ def test_packages(Package, name):
     ("ceph-mon","6789"),
 ])
 def test_listening_interfaces(Socket, Interface, name, port):
-    socket = Socket("tcp://0.0.0.0:" + port)
+    socket = Socket("tcp://" + port)
     assert socket.is_listening
 
 @pytest.mark.parametrize("process,enabled", [

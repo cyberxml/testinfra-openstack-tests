@@ -12,7 +12,7 @@ def test_packages(Package, name):
     assert Package(name).is_installed
 
 def test_listening_interfaces(Socket):
-    socket = Socket("tcp://0.0.0.0:9292")
+    socket = Socket("tcp://9292")
     assert socket.is_listening
 
 @pytest.mark.parametrize("process,enabled", [

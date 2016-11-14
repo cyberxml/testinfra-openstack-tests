@@ -17,7 +17,7 @@ def test_packages(Package, name):
     ("heat-watch","8003"),
 ])
 def test_listening_interfaces(Socket, name, port):
-    socket = Socket("tcp://0.0.0.0:" + port)
+    socket = Socket("tcp://" + port)
     assert socket.is_listening
 
 @pytest.mark.parametrize("process,enabled", [
