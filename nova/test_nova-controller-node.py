@@ -11,7 +11,7 @@ import pytest
     ("openstack-utils"),
     ("openstack-selinux"),
 ])
-def test_packages(Package, name, version):
+def test_packages(Package, name):
     assert Package(name).is_installed
 
 def test_listening_interfaces(Socket):

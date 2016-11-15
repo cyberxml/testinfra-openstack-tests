@@ -9,7 +9,7 @@ def test_packages(Package, name):
     assert Package(name).is_installed
 
 @pytest.mark.parametrize("name,port", [
-    ("mariadb","3306"),
+    ("mongod","27017"),
 ])
 def test_listening_interfaces(Socket, name, port):
     socket = Socket("tcp://" + port)

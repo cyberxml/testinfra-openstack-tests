@@ -3,7 +3,7 @@
 ## Then this role could be executed on OSP version described on the folder's name.
 import pytest
 
-@pytest.mark.parametrize("name,version", [
+@pytest.mark.parametrize("name", [
     ("openstack-nova-common"),
     ("openstack-nova-compute"),
     ("openstack-utils"),
