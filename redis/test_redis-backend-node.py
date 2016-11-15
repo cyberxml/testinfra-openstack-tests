@@ -1,20 +1,21 @@
 import pytest
 
 @pytest.mark.parametrize("name", [
-    ("rabbitmq-server"),
+    ("redis"),
+    ("python-redis"),
 ])
 def test_packages(Package, name):
     assert Package(name).is_installed
 
 @pytest.mark.parametrize("name,port", [
-    ("rabbitmq-server","5672"),
+    ("redis", "6379"),
 ])
 def test_listening_interfaces(Socket, name, port):
     socket = Socket("tcp://" + port)
     assert socket.is_listening
 
 @pytest.mark.parametrize("process,enabled", [
-    ("rabbitmq-server", True),
+    ("redis", True),
 ])
 def test_services(Service, process, enabled):
     service = Service(process)
@@ -22,10 +23,9 @@ def test_services(Service, process, enabled):
     if enabled:
         assert service.is_enabled
 
-@pytest.mark.parametrize("service,conf_file", [
-    ("rabbitmq", "rabbitmq.config"),
-    ("rabbitmq", "rabbitmq-env.conf),
+@pytest.mark.parametrize("conf_file", [
+    ("redis.conf"),
 ])
-def test_main_services_files(File, service, conf_file):
-    _file = File("/etc/" + service + "/" + conf_file)
+def test_main_services_files(File, conf_file):
+    _file = File("/etc/" + conf_file)
     assert _file.exists
