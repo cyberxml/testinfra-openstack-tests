@@ -1,22 +1,22 @@
 import pytest
 
 @pytest.mark.parametrize("name", [
-    ("python-pymongo"),
-    ("puppet-mongodb"),
-    ("mongodb-server"),
+    ("mariadb"),
+    ("mariadb-server"),
+    ("python2-PyMySQL"),
 ])
 def test_packages(Package, name):
     assert Package(name).is_installed
 
 @pytest.mark.parametrize("name,port", [
-    ("mongodb","27017"),
+    ("mariadb","3306"),
 ])
 def test_listening_interfaces(Socket, name, port):
     socket = Socket("tcp://" + port)
     assert socket.is_listening
 
 @pytest.mark.parametrize("process,enabled", [
-    ("mongod", True),
+    ("mariadb", True),
 ])
 def test_services(Service, process, enabled):
     service = Service(process)
@@ -24,9 +24,12 @@ def test_services(Service, process, enabled):
     if enabled:
         assert service.is_enabled
 
-@pytest.mark.parametrize("conf_file", [
-    ("mongod.conf"),
+@pytest.mark.parametrize("service,conf_file", [
+    ("keystone", "keystone.conf"),
+    ("keystone", "policy.json"),
+    ("keystone", "keystone-paste.ini"),
+    ("keystone", "logging.conf"),
 ])
-def test_main_services_files(File, conf_file):
-    _file = File("/etc/" + conf_file)
+def test_main_services_files(File, service, conf_file):
+    _file = File("/etc/" + service + "/" + conf_file)
     assert _file.exists
