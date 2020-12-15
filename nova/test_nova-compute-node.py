@@ -6,18 +6,19 @@ import pytest
 @pytest.mark.parametrize("name", [
     ("openstack-nova-common"),
     ("openstack-nova-compute"),
-    ("openstack-utils"),
+    # ("openstack-utils"),
     ("openstack-selinux"),
-    ("openstack-utils"),
+    # ("openstack-utils"),
 ])
-def test_packages(Package, name):
-    assert Package(name).is_installed
+def test_packages(host, name):
+    pkg = host.package(name)
+    assert pkg.is_installed
 
 @pytest.mark.parametrize("process,enabled", [
     ("openstack-nova-compute", True),
 ])
-def test_services(Service, process, enabled):
-    service = Service(process)
-    assert service.is_running
+def test_services(host, process, enabled):
+    svc = host.service(process)
+    assert svc.is_running
     if enabled:
-        assert service.is_enabled
+        assert svc.is_enabled

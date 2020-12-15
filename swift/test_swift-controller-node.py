@@ -2,24 +2,26 @@ import pytest
 
 @pytest.mark.parametrize("name", [
     ("openstack-swift-object"),
-    ("python-swift"),
     ("openstack-swift-account"),
     ("openstack-swift-proxy"),
     ("openstack-swift-container"),
-    ("python2-swiftclient")
+    ("puppet-swift.noarch"),
+    ("python3-swift.noarch"),
+    ("python3-swiftclient.noarch"),
+
 ])
-def test_packages(Package, name):
-    assert Package(name).is_installed
+def test_packages(host, name):
+    pkg = host.package(name)
+    assert pkg.is_installed
 
 @pytest.mark.parametrize("name,port", [
-    ("swift-container-server", "6001"),
-    ("swift-object-server", "6200"),
-    ("swift-proxy-server", "8080"),
     ("swift-object-server", "6000"),
+    ("swift-container-server", "6001"),
+    ("swift-account-server", "6002"),
 ])
-def test_listening_interfaces(Socket, name, port):
-    socket = Socket("tcp://" + port)
-    assert socket.is_listening
+def test_listening_interfaces(host, name, port):
+    sckt = host.socket("tcp://10.10.10.24:" + port)
+    assert sckt.is_listening
 
 @pytest.mark.parametrize("process,enabled", [
     ("openstack-swift-account-auditor", True),
@@ -37,13 +39,13 @@ def test_listening_interfaces(Socket, name, port):
     ("openstack-swift-object", True),
     ("openstack-swift-proxy", True),
 ])
-def test_services(Service, process, enabled):
-    service = Service(process)
-    assert service.is_running
+def test_services(host, process, enabled):
+    svc = host.service(process)
+    assert svc.is_running
     if enabled:
-        assert service.is_enabled
+        assert svc.is_enabled
 
-@pytest.mark.parametrize("conf_file", [
+@pytest.mark.parametrize("srv,conf_file", [
     ("swift", "account-server.conf"),
     ("swift", "container-reconciler.conf"),
     ("swift", "container-server.conf"),
@@ -52,6 +54,6 @@ def test_services(Service, process, enabled):
     ("swift", "proxy-server.conf"),
     ("swift", "swift.conf"),
 ])
-def test_main_services_files(File, conf_file):
-    _file = File("/etc/" + conf_file)
+def test_main_services_files(host, srv, conf_file):
+    _file = host.file("/etc/" + srv + '/' + conf_file)
     assert _file.exists
